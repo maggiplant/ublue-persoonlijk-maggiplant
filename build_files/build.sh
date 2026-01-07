@@ -9,7 +9,7 @@ set -ouex pipefail
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-sudo dnf5 --assumeyes install emacs-pgtk
+dnf5 --assumeyes install emacs-pgtk
 
 # # Install build dependencies for Emacs
 # sudo dnf5 --assumeyes builddep emacs-pgtk
