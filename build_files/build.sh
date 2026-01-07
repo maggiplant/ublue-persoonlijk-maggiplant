@@ -13,7 +13,7 @@ set -ouex pipefail
 sudo dnf5 --assumeyes builddep emacs-pgtk
 sudo dnf5 --assumeyes install ImageMagick-devel
 
-transaction_id=$(LANG=C sudo dnf history | grep 'builddep' | head -n 1 | awk '{print $1}')
+transaction_id=$(LANG=C sudo dnf history list | grep 'builddep' | head -n 1 | awk '{print $1}')
 installed_packages=$(LANG=C sudo dnf history info $transaction_id | grep "Install" | awk '{print $2}' | tr '\n' ' ')
 
 # Get the latest Emacs tar
