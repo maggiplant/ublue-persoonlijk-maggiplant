@@ -23,17 +23,20 @@ rm emacs.tar.xz
 cd emacs
 
 # Configure, build and install
-./configure --prefix=/opt/emacs -C --with-native-compilation --disable-gc-mark-trace --with-imagemagick --with-mailutils --with-tree-sitter --with-pgtk
+./configure --prefix=/opt/emacs -C --with-native-compilation=aot --disable-gc-mark-trace --with-imagemagick --with-mailutils --with-tree-sitter --with-pgtk
 sudo make install
 
 # Remove the code
 cd ..
 rm -r ./emacs
 
-# Remove build dependecies
-sudo dnf5 --assumeyes remove ImageMagick-devel
-#LANG=C sudo dnf5 --assumeyes builddep emacs 2>&1 | awk -F'"' '/^Package .* is already installed/ {print $2}' | xargs sudo dnf5 --assumeyes remove
-sudo dnf5 --assumeyes remove $installed_packages
+sudo ln -s /opt/emacs/share/applications/emacs.desktop /usr/share/applications/emacs.desktop
+sudo ln -s /opt/emacs/share/applications/emacsclient.desktop /usr/share/applications/emacsclient.desktop
+
+# # Remove build dependecies
+# sudo dnf5 --assumeyes remove ImageMagick-devel
+# #LANG=C sudo dnf5 --assumeyes builddep emacs 2>&1 | awk -F'"' '/^Package .* is already installed/ {print $2}' | xargs sudo dnf5 --assumeyes remove
+# sudo dnf5 --assumeyes remove $installed_packages
 
 
 # Use a COPR Example:
