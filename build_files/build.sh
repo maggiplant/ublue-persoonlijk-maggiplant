@@ -33,7 +33,7 @@ rm -r ./emacs
 # Remove build dependecies
 sudo dnf5 --assumeyes remove ImageMagick-devel
 #LANG=C sudo dnf5 --assumeyes builddep emacs 2>&1 | awk -F'"' '/^Package .* is already installed/ {print $2}' | xargs sudo dnf5 --assumeyes remove
-sudo dnf5 --assumeyes $installed_packages
+sudo dnf5 --assumeyes remove $installed_packages
 
 
 # Use a COPR Example:
