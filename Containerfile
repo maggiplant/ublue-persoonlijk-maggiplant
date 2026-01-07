@@ -3,8 +3,8 @@ FROM scratch AS ctx
 COPY build_files /
 
 # Base Image
-FROM ghcr.io/ublue-os/aurora-dx-nvidia-open:stable
-#FROM ghcr.io/ublue-os/bazzite-dx-nvidia:stable
+#FROM ghcr.io/ublue-os/aurora-dx-nvidia-open:stable
+FROM ghcr.io/ublue-os/bazzite-dx-nvidia:stable
 
 ### [IM]MUTABLE /opt
 ## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
