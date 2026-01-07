@@ -9,29 +9,38 @@ set -ouex pipefail
 # List of rpmfusion packages can be found here:
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-# Install build dependencies for Emacs
-sudo dnf5 --assumeyes builddep emacs-pgtk
-sudo dnf5 --assumeyes install ImageMagick-devel
+sudo dnf5 --assumeyes install emacs-pgtk
 
-transaction_id=$(LANG=C sudo dnf history list | grep 'builddep' | head -n 1 | awk '{print $1}')
-installed_packages=$(LANG=C sudo dnf history info $transaction_id | grep "Install" | awk '{print $2}' | tr '\n' ' ')
+# # Install build dependencies for Emacs
+# sudo dnf5 --assumeyes builddep emacs-pgtk
+# sudo dnf5 --assumeyes install ImageMagick-devel
 
-# Get the latest Emacs tar
-curl -o emacs.tar.xz -L https://ftpmirror.gnu.org/gnu/emacs/emacs-30.2.tar.xz
-tar xJf emacs.tar.xz --one-top-level=emacs --strip-components=1
-rm emacs.tar.xz
-cd emacs
+# transaction_id=$(LANG=C sudo dnf history list | grep 'builddep' | head -n 1 | awk '{print $1}')
+# installed_packages=$(LANG=C sudo dnf history info $transaction_id | grep "Install" | awk '{print $2}' | tr '\n' ' ')
 
-# Configure, build and install
-./configure --prefix=/opt/emacs -C --with-native-compilation=aot --disable-gc-mark-trace --with-imagemagick --with-mailutils --with-tree-sitter --with-pgtk
-sudo make install
+# # Get the latest Emacs tar
+# curl -o emacs.tar.xz -L https://ftpmirror.gnu.org/gnu/emacs/emacs-30.2.tar.xz
+# tar xJf emacs.tar.xz --one-top-level=emacs --strip-components=1
+# rm emacs.tar.xz
+# cd emacs
 
-# Remove the code
-cd ..
-rm -r ./emacs
+# # Configure, build and install
+# ./configure --prefix=/opt/emacs -C --with-native-compilation=aot --disable-gc-mark-trace --with-imagemagick --with-mailutils --with-tree-sitter --with-pgtk
+# sudo make install
 
-sudo ln -s /opt/emacs/share/applications/emacs.desktop /usr/share/applications/emacs.desktop
-sudo ln -s /opt/emacs/share/applications/emacsclient.desktop /usr/share/applications/emacsclient.desktop
+# # Remove the code
+# cd ..
+# rm -r ./emacs
+
+
+# sudo ln -s /opt/emacs/bin/* /usr/bin/
+
+# # Icoontje (TODO)
+# # sudo ln -s /opt/emacs/share/icons/... ...
+
+# sudo ln -s /opt/emacs/share/applications/emacs.desktop /usr/share/applications/emacs.desktop
+# sudo ln -s /opt/emacs/share/applications/emacsclient.desktop /usr/share/applications/emacsclient.desktop
+
 
 # # Remove build dependecies
 # sudo dnf5 --assumeyes remove ImageMagick-devel
