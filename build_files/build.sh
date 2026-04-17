@@ -10,7 +10,16 @@ set -ouex pipefail
 # https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
 dnf5 --assumeyes install emacs-pgtk
-dnf5 --assumeyes install mksh
+
+#dnf5 --assumeyes install mksh
+
+## Ksh93 installeren
+git clone https://github.com/ksh93/ksh.git
+cd ./ksh
+./bin/package make
+./bin/package install /usr/
+cd ..
+rm -rf ./ksh
 
 # # Install build dependencies for Emacs
 # sudo dnf5 --assumeyes builddep emacs-pgtk
