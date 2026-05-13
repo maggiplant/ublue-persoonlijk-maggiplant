@@ -13,13 +13,14 @@ dnf5 --assumeyes install emacs-pgtk
 
 #dnf5 --assumeyes install mksh
 
-## Ksh93 installeren
-git clone https://github.com/ksh93/ksh.git
-cd ./ksh
-./bin/package make
-./bin/package install /usr/
-cd ..
-rm -rf ./ksh
+## Ksh93 installeren (staat ook gewoon in Homebrew)
+# git clone https://github.com/ksh93/ksh.git
+# cd ./ksh
+# git checkout v1.0.10
+# ./bin/package make
+# ./bin/package install /usr/
+# cd ..
+# rm -rf ./ksh
 
 # # Install build dependencies for Emacs
 # sudo dnf5 --assumeyes builddep emacs-pgtk
