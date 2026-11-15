@@ -80,7 +80,10 @@ jobs:
 
       - name: Build disk images
         id: build
-        uses: osbuild/bootc-image-builder-action@main
+        # Pinned to the final commit of the action (now deprecated);
+        # osbuild/image-builder-action is the successor, see:
+        # https://github.com/osbuild/bootc-image-builder-action/commit/028e4d28330efe546229eb9cb52aee78174d2347
+        uses: osbuild/bootc-image-builder-action@028e4d28330efe546229eb9cb52aee78174d2347
         with:
           builder-image: ${{ env.BIB_IMAGE }}
           config-file: ${{ matrix.disk-type == 'anaconda-iso' && './disk_config/iso-kde.toml' || './disk_config/disk.toml' }}
