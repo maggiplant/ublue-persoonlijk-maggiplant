@@ -276,22 +276,33 @@ run-vm-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-
 run-vm-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "iso" "disk_config/iso-kde.toml")
 
 # Run a virtual machine using systemd-vmspawn
-[group('Run Virtal Machine')]
+# Rebuild the image first with e.g. `just spawn-vm 1 qcow2 6G` or `just spawn-vm rebuild=1`
+[group('Run Virtual Machine')]
 spawn-vm rebuild="0" type="qcow2" ram="6G":
     #!/usr/bin/env bash
 
     set -euo pipefail
 
-    [ "{{ rebuild }}" -eq 1 ] && echo "Rebuilding the ISO" && just build-vm {{ rebuild }} {{ type }}
+    # just binds recipe arguments positionally, so `rebuild=1` on the command
+    # line arrives as the literal string "rebuild=1"; strip any `name=` prefix
+    # so both invocation styles work.
+    rebuild="{{ rebuild }}"; rebuild="${rebuild#rebuild=}"
+    type="{{ type }}";       type="${type#type=}"
+    ram="{{ ram }}";         ram="${ram#ram=}"
+
+    if [[ "${rebuild}" -eq 1 ]]; then
+        echo "Rebuilding the VM image"
+        just "build-${type}"
+    fi
 
     systemd-vmspawn \
       -M "bootc-image" \
       --console=gui \
       --cpus=2 \
-      --ram=$(echo {{ ram }}| /usr/bin/numfmt --from=iec) \
+      --ram=$(echo "${ram}" | /usr/bin/numfmt --from=iec) \
       --network-user-mode \
       --vsock=false --pass-ssh-key=false \
-      -i ./output/**/*.{{ type }}
+      -i ./output/**/*.${type}
 
 
 # Runs shell check on all Bash scripts
