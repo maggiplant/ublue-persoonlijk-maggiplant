@@ -90,7 +90,9 @@ jobs:
           image: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DEFAULT_TAG }}
           chown: ${{ env.USER_UID }}:${{ env.USER_GID }}
           types: ${{ matrix.disk-type }}
-          additional-args: --use-librepo=True
+          # Keep qcow2/raw in sync with the local Justfile builds (btrfs);
+          # --rootfs only applies to disk images, not to the anaconda-iso.
+          additional-args: ${{ matrix.disk-type == 'anaconda-iso' && '--use-librepo=True' || '--use-librepo=True --rootfs=btrfs' }}
 
       - name: Upload disk images and Checksum to Job Artifacts
         if: inputs.upload-to-s3 != true && github.event_name != 'pull_request'
