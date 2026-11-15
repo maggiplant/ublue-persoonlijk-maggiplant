@@ -20,12 +20,12 @@ Daarna herstarten, en vervolgens schakelt `sudo bootc upgrade` (of de standaard 
 
 # CI-workflows
 
-- [build.yml](./.github/workflows/build.yml) bouwt de image en publiceert die naar GHCR (`ghcr.io/maggiplant/ublue-persoonlijk-maggiplant`) met de tags `latest`, `latest.YYYYMMDD` en `YYYYMMDD`. Elke build wordt ondertekend met cosign; de publieke sleutel staat in [cosign.pub](./cosign.pub).
+- [build.yml](./.github/workflows/build.yml) bouwt de image via het [Justfile](./Justfile), rechunkt die met rpm-ostree (kleinere deltas bij `bootc update`) en publiceert die naar GHCR (`ghcr.io/maggiplant/ublue-persoonlijk-maggiplant`) met de tags `latest`, `latest-YYYYMMDD`, `YYYYMMDD` en — bij een schone werkmap — SHA-varianten. Elke build wordt ondertekend met cosign; de publieke sleutel staat in [cosign.pub](./cosign.pub).
 - [build-disk.yml](./.github/workflows/build-disk.yml) maakt met [bootc-image-builder](https://osbuild.org/docs/bootc/) schrijfbare images (`qcow2`) en een installatie-ISO (`anaconda-iso`). De ISO-kickstarts in [disk_config/iso-kde.toml](./disk_config/iso-kde.toml) en [disk_config/iso-gnome.toml](./disk_config/iso-gnome.toml) wijzen al naar deze image. Upload naar S3 is optioneel (workflow_dispatch met `upload-to-s3`).
 
 # Justfile
 
-Voor het lokaal bouwen en testen is [just](https://just.systems/man/en/introduction.html) nodig (staat standaard op Universal Blue-images), samen met `podman` en `jq`.
+Voor het lokaal bouwen en testen is [just](https://just.systems/man/en/introduction.html) nodig (staat standaard op Universal Blue-images), samen met `podman` en `jq`. Alle parameters (imagenavam, organisatie, omschrijving, BIB-image) staan in [ublue-persoonlijk-maggiplant.env](./ublue-persoonlijk-maggiplant.env).
 
 ## Image bouwen
 
