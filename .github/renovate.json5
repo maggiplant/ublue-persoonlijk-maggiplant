@@ -11,6 +11,13 @@
       "automerge": true,
       "matchUpdateTypes": ["pin", "pinDigest"]
     },
+    // This prevents the base image from being pinned: this image deliberately
+    // follows the floating :stable tag
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/ublue-os/bazzite-nvidia-open"],
+      "pinDigests": false
+    },
     {
       "enabled": false,
       "matchUpdateTypes": ["digest", "pinDigest", "pin"],
