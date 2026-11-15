@@ -1,4 +1,6 @@
-export image_name := env("IMAGE_NAME", "ublue-persoonlijk-maggiplant") # output image name, usually same as repo name, change as needed
+# output image name, usually same as repo name, change as needed
+
+export image_name := env("IMAGE_NAME", "ublue-persoonlijk-maggiplant")
 export default_tag := env("DEFAULT_TAG", "latest")
 export bib_image := env("BIB_IMAGE", "quay.io/centos-bootc/bootc-image-builder:latest")
 
@@ -26,10 +28,10 @@ check:
 fix:
     #!/usr/bin/bash
     find . -type f -name "*.just" | while read -r file; do
-    	echo "Checking syntax: $file"
+    	echo "Fixing syntax: $file"
     	just --unstable --fmt -f $file
     done
-    echo "Checking syntax: Justfile"
+    echo "Fixing syntax: Justfile"
     just --unstable --fmt -f Justfile || { exit 1; }
 
 # Clean Repo
@@ -88,14 +90,7 @@ sudoif command *args:
 # Build the image using the specified parameters
 build $target_image=image_name $tag=default_tag:
     #!/usr/bin/env bash
-
-    BUILD_ARGS=()
-    if [[ -z "$(git status -s)" ]]; then
-        BUILD_ARGS+=("--build-arg" "SHA_HEAD_SHORT=$(git rev-parse --short HEAD)")
-    fi
-
     podman build \
-        "${BUILD_ARGS[@]}" \
         --pull=newer \
         --tag "${target_image}:${tag}" \
         .
@@ -198,27 +193,27 @@ _build-bib $target_image $tag $type $config: (_rootful_load_image target_image t
 _rebuild-bib $target_image $tag $type $config: (build target_image tag) && (_build-bib target_image tag type config)
 
 # Build a QCOW2 virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 build-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "qcow2" "disk_config/disk.toml")
 
 # Build a RAW virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 build-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "raw" "disk_config/disk.toml")
 
 # Build an ISO virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 build-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_build-bib target_image tag "iso" "disk_config/iso-kde.toml")
 
 # Rebuild a QCOW2 virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 rebuild-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "qcow2" "disk_config/disk.toml")
 
 # Rebuild a RAW virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 rebuild-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "raw" "disk_config/disk.toml")
 
 # Rebuild an ISO virtual machine image
-[group('Build Virtal Machine Image')]
+[group('Build Virtual Machine Image')]
 rebuild-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_rebuild-bib target_image tag "iso" "disk_config/iso-kde.toml")
 
 # Run a virtual machine with the specified image type and configuration
@@ -264,18 +259,19 @@ _run-vm $target_image $tag $type $config:
     podman run "${run_args[@]}"
 
 # Run a virtual machine from a QCOW2 image
-[group('Run Virtal Machine')]
+[group('Run Virtual Machine')]
 run-vm-qcow2 $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "qcow2" "disk_config/disk.toml")
 
 # Run a virtual machine from a RAW image
-[group('Run Virtal Machine')]
+[group('Run Virtual Machine')]
 run-vm-raw $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "raw" "disk_config/disk.toml")
 
 # Run a virtual machine from an ISO
-[group('Run Virtal Machine')]
+[group('Run Virtual Machine')]
 run-vm-iso $target_image=("localhost/" + image_name) $tag=default_tag: && (_run-vm target_image tag "iso" "disk_config/iso-kde.toml")
 
 # Run a virtual machine using systemd-vmspawn
+
 # Rebuild the image first with e.g. `just spawn-vm 1 qcow2 6G` or `just spawn-vm rebuild=1`
 [group('Run Virtual Machine')]
 spawn-vm rebuild="0" type="qcow2" ram="6G":
@@ -303,7 +299,6 @@ spawn-vm rebuild="0" type="qcow2" ram="6G":
       --network-user-mode \
       --vsock=false --pass-ssh-key=false \
       -i ./output/**/*.${type}
-
 
 # Runs shell check on all Bash scripts
 lint:
